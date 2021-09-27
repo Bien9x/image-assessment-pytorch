@@ -11,7 +11,6 @@ from io import BytesIO
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-from base64 import b64encode
 
 
 @app.post("/uploadfile/")
