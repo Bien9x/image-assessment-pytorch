@@ -1,1 +1,1 @@
-python trainer.py -e 5 -lr 1e-5 -b 2
+python trainer.py -e 5 -lr 0.00001 -b 64 -m resnet18 -i D:/

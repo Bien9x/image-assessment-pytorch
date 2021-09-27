@@ -12,6 +12,11 @@ def ensure_dir_exists(dir):
         os.makedirs(dir)
 
 
+def calc_mean_score(score_dist):
+    score_dist = normalize_labels(score_dist)
+    return (score_dist * np.arange(1, 11)).sum()
+
+
 class AverageMeter(object):
     """
     Keeps track of most recent, average, sum, and count of a metric.

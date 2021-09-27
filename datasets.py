@@ -30,7 +30,6 @@ class ImageDataset(Dataset):
         img = open_image(img_path)
         if self.transform is not None:
             img = self.transform(img)
-
         y = utils.normalize_labels(sample['label'])
         return img, y
 

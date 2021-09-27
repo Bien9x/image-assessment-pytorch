@@ -11,19 +11,19 @@ from torchvision import transforms
 
 
 # Base models on Imagenet benchmark: https://rwightman.github.io/pytorch-image-models/results/
-def train(base_model_name, batch_size, fine_tune, dropout, lr, n_epochs, checkpoint_dir, log_interval,
+def train(img_dir, base_model_name, batch_size, fine_tune, dropout, lr, n_epochs, checkpoint_dir, log_interval,
           checkpoint=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     n_classes = 10
-    train_dataset = ImageDataset("data/images", "data/test/train.json", n_classes, transform=transforms.Compose([
-        transforms.Resize(256),
+    train_dataset = ImageDataset(img_dir, "data/AVA_valid/ava_labels_train.json", n_classes, transform=transforms.Compose([
+        transforms.Resize((256, 256)),
         transforms.RandomCrop(224),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]))
-    val_dataset = ImageDataset("data/images", "data/test/test.json", n_classes, transform=transforms.Compose([
-        transforms.Resize(224),
+    val_dataset = ImageDataset(img_dir, "data/AVA_valid/ava_labels_test.json", n_classes, transform=transforms.Compose([
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]))
@@ -59,7 +59,7 @@ def train(base_model_name, batch_size, fine_tune, dropout, lr, n_epochs, checkpo
             print("\nEpochs since last improvement: %d\n" % (epochs_since_improvement,))
         else:
             epochs_since_improvement = 0
-        save_checkpoint(checkpoint_dir, "ava_{}_{}".format(base_model_name, epoch), epoch, model, optimizer,
+        save_checkpoint(checkpoint_dir, "ava_{}".format(base_model_name), epoch, model, optimizer,
                         epochs_since_improvement, loss,
                         is_best)
 
@@ -139,6 +139,9 @@ if __name__ == '__main__':
         '-e', '--epoch', help='Num epoch', required=True, type=int
     )
     parser.add_argument(
+        '-i', '--img_dir', help='Images folder', required=True, type=str
+    )
+    parser.add_argument(
         '-lr', '--lr', help='Learning rate', required=True, type=float
     )
     parser.add_argument(
@@ -173,7 +176,7 @@ if __name__ == '__main__':
     log_interval = args.__dict__['log_interval']
     checkpoint = args.__dict__['checkpoint']
     lr = args.__dict__['lr']
+    img_dir = args.__dict__['img_dir']
 
-    train(base_model_name=base_model_name, batch_size=batch_size, fine_tune=fine_tune, dropout=dropout, lr=lr,
-          n_epochs=n_epoches, checkpoint_dir=cp_dir, log_interval=log_interval,
-          checkpoint=checkpoint)
+    train(img_dir=img_dir, base_model_name=base_model_name, batch_size=batch_size, fine_tune=fine_tune, dropout=dropout,
+          lr=lr, n_epochs=n_epoches, checkpoint_dir=cp_dir, log_interval=log_interval, checkpoint=checkpoint)
