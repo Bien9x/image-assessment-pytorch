@@ -16,14 +16,15 @@ def train(img_dir, base_model_name, batch_size, fine_tune, dropout, lr, n_epochs
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     n_classes = 10
     train_dataset = ImageDataset(img_dir, "data/AVA_valid/ava_labels_train.json", n_classes, transform=transforms.Compose([
-        transforms.Resize((256, 256)),
+        transforms.Resize(256),
         transforms.RandomCrop(224),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]))
     val_dataset = ImageDataset(img_dir, "data/AVA_valid/ava_labels_test.json", n_classes, transform=transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]))

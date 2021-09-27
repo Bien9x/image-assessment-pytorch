@@ -11,6 +11,8 @@ class Nima(nn.Module):
         super(Nima, self).__init__()
         self.base_model_name = base_model_name
         self.base_model = timm.create_model(base_model_name, pretrained=True)
+        self.config = self.base_model.default_cfg
+        #print(self.config)
         modules = list(self.base_model.children())
         n_features = modules[-1].in_features
         modules = modules[:-1]
